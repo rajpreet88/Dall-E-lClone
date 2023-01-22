@@ -16,31 +16,59 @@ const CreatePost = () => {
   const [generatingImg, setGeneratingImg] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  // const generateImage = async () => {
+  //   if (form.prompt) {
+  //     try {
+  //       setGeneratingImg(true);
+
+  //       const response = await fetch("http://localhost:8888/api/v1/dalle", {
+  //         method: "POST",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //         body: JSON.stringify({
+  //           prompt: form.prompt,
+  //         }),
+  //       });
+
+  //       const data = await response.json();
+
+  //       setForm({ ...form, photo: `data:image/jpeg;base64,${data.photo}` });
+  //     } catch (e) {
+  //       alert(e);
+  //     } finally {
+  //       setGeneratingImg(false);
+  //     }
+  //   } else {
+  //     alert("Please enter a prompt");
+  //   }
+  // };
+
   const generateImage = async () => {
     if (form.prompt) {
       try {
         setGeneratingImg(true);
-
-        const response = await fetch("http://localhost:8888/api/v1/dalle", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            prompt: form.prompt,
-          }),
-        });
-
+        const response = await fetch(
+          "http://localhost:8888/api/v1/dalle",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              prompt: form.prompt,
+            }),
+          }
+        );
         const data = await response.json();
-
         setForm({ ...form, photo: `data:image/jpeg;base64,${data.photo}` });
-      } catch (e) {
-        alert(e);
+      } catch (err) {
+        alert(err);
       } finally {
         setGeneratingImg(false);
       }
     } else {
-      alert("Please enter a prompt");
+      alert("Please provide proper prompt");
     }
   };
 
@@ -127,21 +155,23 @@ const CreatePost = () => {
             )}
 
             {generatingImg && (
-              <div className="absolute flex justify-center items-center bg-[rgba(0,0,0,0.5) rounded-lg]">
+              <div className="absolute inset-0 z-0 flex justify-center items-center bg-[rgba(0,0,0,0.5) rounded-lg]">
                 <Loader />
               </div>
             )}
           </div>
         </div>
+
         <div className="mt-5 flex gap-5">
           <button
             type="button"
-            className="bg-green-700 font-medium text-sm w-full sm:w-auto py-2.5 px-5 text-center rounded-md"
+            className="bg-green-700 text-white font-medium text-sm w-full sm:w-auto py-2.5 px-5 text-center rounded-md"
             onClick={generateImage}
           >
-            {generatingImg ? "Generating Image..." : "Generate"}
+            {generatingImg ? "Generating..." : "Generate"}
           </button>
         </div>
+
         <div className="mt-10">
           <p className="mt-2 text-[#666e75] text-[14px]">
             ** Once you have created the image you want, you cna share it with
@@ -151,7 +181,7 @@ const CreatePost = () => {
             type="submit"
             className="mt-3 bg-[#6469ff] text-white w-full rounded-md text-sm sm:w-auto py-2.5 px-5 text-center"
           >
-            {loading ? "Sharing..." : "Share"}
+            {loading ? "Sharing..." : "Share with Community"}
           </button>
         </div>
       </form>
